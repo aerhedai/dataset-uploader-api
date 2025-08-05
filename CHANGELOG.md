@@ -7,32 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.0.0] - 2025-07-23
+## [0.1.0] - 2025-08-05
 
 ### 🎉 Initial Release
 
 #### Added
-- ✅ Dockerfile for building and running the API in a containerised environment.
-- ✅ `main.py` for FastAPI app instantiation and route registration.
-- ✅ Modular folder structure:
-  - `api/` – Contains route definitions.
-  - `services/` – Business logic layer (example included).
-  - `models/` – Pydantic schemas for request/response models.
-  - `core/` – Pydantic config for setup.
-  - `utils/` – Logger utility included.
-  - `tests/` – Sample unit test structure.
-- ✅ `logging.py` for basic application logging using the standard library.
-- ✅ Example endpoint: `/example`.
-- ✅ Swagger/OpenAPI support via FastAPI (`/docs` and `/redoc`).
-- ✅ Requirements file for dependency management.
-- ✅ Readme with full instructions and project overview.
-
-## [1.0.1] - 2025-07-23
-
-### Fixed
-- 🐛 Added missing `httpx` dependency required for testing with `TestClient`.
-- ✅ Ensured all test routes run successfully using `pytest`.
-
+- Initial implementation of the Dataset Uploader API.
+- Endpoint to upload datasets in `.csv`, `.json`, `.xlsx`, and `.parquet` formats.
+- File validation for supported extensions and file size.
+- File saving to a local directory (`uploads/`).
+- Automatic directory creation if it does not exist.
+- Config management via Pydantic settings (migrated to `pydantic-settings`).
+- Logging setup for successful and failed uploads.
+- API documentation with automatic schema generation via FastAPI.
 
 ---
 

@@ -1,5 +1,7 @@
 fastapi
 uvicorn
 pydantic
+pydantic-settings
 pytest
+python-multipart
 httpx
