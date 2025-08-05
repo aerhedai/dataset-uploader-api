@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
-from main import app
+from app import main
 import os
 
-client = TestClient(app)
+client = TestClient(main)
 
 def test_upload_csv(tmp_path, monkeypatch):
     monkeypatch.setenv("DATA_DIR", str(tmp_path))
