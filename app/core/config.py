@@ -1,8 +1,7 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    project_name: str = "Python API Boilerplate"
-    debug: bool = True
+    DATA_DIR: str = "data/uploads"
 
     class Config:
         env_file = ".env"

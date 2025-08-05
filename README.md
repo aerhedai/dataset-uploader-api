@@ -1,149 +1,187 @@
-# Python API Boilerplate
+# 📁 Dataset Uploader API
 
-A ready-to-use, Dockerized FastAPI boilerplate for building scalable and maintainable Python APIs quickly. This boilerplate provides a modular folder structure, logging, routing, and example code to get you started with building your own APIs efficiently.
-
----
-
-## Features
-
-- ⚡ FastAPI framework with automatic docs (`/docs` and `/redoc`)
-- 🧱 Modular code organisation (routes, services, models, utils)
-- 🐳 Docker support for consistent local development and deployment
-- 📜 Logging included for easier debugging and monitoring
-- 🚀 Easily extendable for real projects
+A modular Python-based REST API for uploading datasets in formats such as CSV, JSON, Excel, and Parquet. This API is the first step in a data processing pipeline and is intended to be used in conjunction with other tools or AI agents that perform further analysis, transformation, or modelling.
 
 ---
 
-## Directory Structure
+## 🚀 Features
+
+- Upload datasets via HTTP POST requests
+- Supported formats: `.csv`, `.json`, `.xlsx`, `.parquet`
+- Saves files to a local directory or configurable storage path
+- Returns metadata and a reference path to the uploaded file
+- Built using FastAPI with automatic Swagger UI documentation
+
+---
+
+## 🏗 Project Structure
 
 ```
-.
+dataset-uploader-api/
+│
 ├── app/
 │   ├── api/
-│   │   └── routes.py           # API route definitions
-│   ├── services/
-│   │   └── example.py          # Business logic/services
-│   ├── models/
-│   │   └── example_schema.py   # Pydantic models for validation
+│   │   └── routes.py         # API endpoints
 │   ├── core/
-│   │   └── config.py           # Pydantic config for setup
-│   ├── utils/
-│   │   └── logging.py          # Logger setup
-│   ├── main.py                 # FastAPI app setup and route inclusion
-├── tests/
-│   └── test_example.py         # Example unit tests
-├── Dockerfile                  # Docker configuration
-├── requirements.txt            # Python dependencies
-├── README.md                   # Project readme
-├── .gitignore                  # Ignore rules
-├── LICENSE                     # Distribution and Usage License
-├── .env.example                # Environmental variable examples
-├── CHANGELOG.md                # API boilerplate changelog
+│   │   └── config.py         # Settings and environment config
+│   ├── services/
+│   │   └── uploader.py       # Upload handling logic
+│   └── main.py               # Entry point for the app
+│
+├── uploads/                  # Directory where uploaded datasets are stored
+├── .env                      # Environment variable definitions
+├── requirements.txt          # Python package dependencies
+├── README.md                 # Documentation (this file)
+└── run.py                    # Launch script using uvicorn
 ```
 
 ---
 
-## Getting Started
+## ⚙️ Setup Instructions
 
-### 🔧 Prerequisites
+### 1. Clone the Repository
 
-- Docker installed on your machine
-- (Optional) Python 3.9+ if not using Docker
-
-### 🚀 Running with Docker
-
-1. Build the image:
-   ```bash
-   docker build -t api-boilerplate .
-   ```
-
-2. Run the container:
-   ```bash
-   docker run -p 8000:8080 api-boilerplate
-   ```
-
-3. Access your API:
-   - API base: http://localhost:8000
-   - Swagger UI: http://localhost:8000/docs
-   - ReDoc: http://localhost:8000/redoc
-
----
-
-### 🧪 Running Locally (without Docker)
-
-1. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate        # macOS/Linux
-   venv\Scripts\activate           # Windows
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Run the app:
-   ```bash
-   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-   ```
-
----
-
-## 🛠️ Extending the Boilerplate
-
-- **Add Routes:**  
-  Define new endpoints in `app/api/` and register them via the router.
-
-- **Add Services:**  
-  Place logic in `app/services/` and call from your routes.
-
-- **Define Models:**  
-  Use Pydantic in `app/models/` for request/response validation.
-
-- **Utilities:**  
-  Add helpers/loggers in `app/utils/`.
-
-- **Tests:**  
-  Write unit and integration tests in `tests/`.
-
-- **Environment Configs (optional):**  
-  Use `python-dotenv` or other tools for managing environment variables.
-
----
-
-## ✅ Notes
-
-- Docker exposes port 8080 (internal) as 8000 (host).
-- Modify the Dockerfile or FastAPI config if you want different ports.
-- Structure is suitable for scaling: you can add auth, DB, caching, etc.
-
----
-
-## 🧪 Example Endpoint
-
-Try:
-```
-GET http://localhost:8000/example
+```bash
+git clone https://github.com/aerhedai/dataset-uploader-api.git
+cd dataset-uploader-api
 ```
 
-Response:
+### 2. Create & Activate a Virtual Environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+If using Pydantic v2, make sure this is installed too:
+
+```bash
+pip install pydantic-settings
+```
+
+### 4. Set Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+PROJECT_NAME=Dataset Uploader API
+FILE_UPLOAD_DIR=uploads
+```
+
+---
+
+## ▶️ Run the API Locally
+
+Use the provided `run.py` script:
+
+```bash
+python run.py
+```
+
+The API will be available at:
+
+```
+http://127.0.0.1:8000
+```
+
+Docs available at:
+
+- Swagger UI: `/docs`
+- ReDoc: `/redoc`
+
+---
+
+## 📤 Upload Endpoint
+
+### POST `/upload`
+
+Upload a dataset file.
+
+#### Request (multipart/form-data):
+
+```
+file: <your_dataset.csv|.json|.xlsx|.parquet>
+```
+
+#### Example with `curl`:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/upload" \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@/path/to/your/dataset.csv"
+```
+
+#### Response:
+
 ```json
 {
-  "message": "Hello from the example service!"
+  "filename": "dataset.csv",
+  "filepath": "uploads/dataset.csv",
+  "message": "File uploaded successfully"
 }
 ```
 
 ---
 
-## 🧾 License
+## ✅ Supported File Types
 
-MIT License. Feel free to use and modify.
+| Extension | Description     |
+|-----------|-----------------|
+| `.csv`    | Comma-separated values |
+| `.json`   | JSON formatted data |
+| `.xlsx`   | Excel file |
+| `.parquet`| Apache Parquet |
 
 ---
 
-## 🙌 Contributing
+## 🔐 Notes
 
-Pull requests welcome! Open an issue for feature requests or bugs.
+- Ensure the `uploads/` directory exists and is writable.
+- File size limits or authentication can be added if needed.
+- To integrate cloud storage (like GCP or AWS), modify `uploader.py`.
 
 ---
+
+## 🧱 Tech Stack
+
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [Uvicorn](https://www.uvicorn.org/)
+- [Pydantic v2](https://docs.pydantic.dev/)
+- [Python 3.9+](https://www.python.org/)
+
+---
+
+## 🧠 Use Cases
+
+This API is ideal for:
+
+- Feeding datasets to machine learning or data science pipelines
+- Integrating with AI agents to automate dataset intake
+- Modular data apps that require isolated upload functionality
+
+---
+
+## 🏢 Part of the Aerhed AI Tool Suite
+
+This uploader is designed to be part of a suite of modular APIs under the Aerhed AI ecosystem. It can be composed with:
+
+- Data Cleaner API
+- Schema Detector API
+- Visualiser API
+- Model Training API
+- and more...
+
+Each API is independent but can be orchestrated by an AI agent for powerful automation.
+
+---
+
+## 📬 Contact
+
+Built by [aerhedai](https://github.com/aerhedai). For questions or collaborations, feel free to reach out via GitHub or add issues/pull requests to this repo.

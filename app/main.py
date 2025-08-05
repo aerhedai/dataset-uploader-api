@@ -1,10 +1,14 @@
 from fastapi import FastAPI
 from app.api import routes
-from .utils.logging import setup_logger
 
-logger = setup_logger(__name__)
-logger.info("App is starting...")
-app = FastAPI(title="Python API Boilerplate")
+app = FastAPI(
+    title="Dataset Uploader API",
+    description="Upload and manage datasets for further processing.",
+    version="0.1.0"
+)
 
-# Register routes
 app.include_router(routes.router)
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
